@@ -1,0 +1,55 @@
+#include <Servo.h>
+
+
+
+int sensorpin = 6;//传感器引脚，出水 1，无水0
+int pumpin = 13;//水泵引脚，低电平触发 digitalWrite(8,LOW)
+int var;
+int var3;
+
+int sensorpin2  = A5;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+
+  pinMode(sensorpin,INPUT);
+  pinMode(sensorpin2,INPUT);
+  pinMode(pumpin,OUTPUT);
+  digitalWrite(pumpin,HIGH);//水泵关闭
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  var = digitalRead(sensorpin);
+
+  int var2  = digitalRead(pumpin);
+  var3  = analogRead(sensorpin2);
+
+  Serial.print("var3:");
+  Serial.println(var3);
+
+  //判断：传感器检测值为1时表示没水，为0时表示有水
+  if(var  ==  1&& var3  >600)
+  {
+    Serial.print(var);
+    Serial.println("缺水");
+    digitalWrite(pumpin,LOW);//打开水泵
+    Serial.println("水泵状态：打开");
+    delay(2000);//浇水时间为20秒
+
+     digitalWrite(pumpin,HIGH);//关水泵
+     Serial.println("水泵关闭");
+    
+  }
+  else
+  {
+    digitalWrite(pumpin,HIGH);//水泵关闭
+    Serial.print(var);
+    Serial.println("不缺水状态");
+    Serial.println("水泵关闭");
+    
+  }
+delay(1000);//十秒钟扫描一次
+}
